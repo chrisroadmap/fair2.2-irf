@@ -18,7 +18,7 @@
 #
 # with different shapes over the historical
 #
-# the total emissions size will be 1 MtCH4, and this will be emitted over different time frames over 30 years on top of ssp119, ssp245 and ssp585
+# the total emissions size will be 1 GtCO2, and this will be emitted over different time frames over 30 years on top of ssp119, ssp245 and ssp585
 
 # %%
 import os
@@ -131,9 +131,9 @@ for profile in profiles:
 f_irf = {}
 for profile in profiles:
     new_emissions = f.emissions.copy()
-    new_emissions[275:, 0, :, 3] = new_emissions[275:, 0, :, 3] + perturbations["ssp119"][profile][:, None]
-    new_emissions[275:, 1, :, 3] = new_emissions[275:, 1, :, 3] + perturbations["ssp245"][profile][:, None]
-    new_emissions[275:, 2, :, 3] = new_emissions[275:, 2, :, 3] + perturbations["ssp585"][profile][:, None]
+    new_emissions[275:, 0, :, 0] = new_emissions[275:, 0, :, 0] + perturbations["ssp119"][profile][:, None]
+    new_emissions[275:, 1, :, 0] = new_emissions[275:, 1, :, 0] + perturbations["ssp245"][profile][:, None]
+    new_emissions[275:, 2, :, 0] = new_emissions[275:, 2, :, 0] + perturbations["ssp585"][profile][:, None]
     
     f_irf[profile] = FAIR(ch4_method='Thornhill2021')
     f_irf[profile].define_time(1750, 2500, 1)
@@ -201,26 +201,26 @@ for iscen, scenario in enumerate(scenarios):
             scaling = 1
             label = profile
         ax[iscen].plot(np.arange(-1, 476), irf[scenario][profile].median(dim='config') * scaling, label=label);
-    ax[iscen].set_title(f'Impulse response to 1 MtCH4 upon {scenario}')
+    ax[iscen].set_title(f'Impulse response to 1 GtCO2 upon {scenario}')
     ax[iscen].set_xlim(0, 100)
-    ax[iscen].set_ylim(0.0, 7e-5)
+    ax[iscen].set_ylim(0.0, 5e-4)
 #plt.axhline(0, ls=":", color="k")
 ax[0].set_ylabel('Temperature increase, K')
 ax[0].legend()
 
-plt.savefig('../plots/shapes_ch4.png')
+plt.savefig('../plots/shapes_co2.png')
 
 # %%
 fig, ax = plt.subplots(1, 3, figsize=(16, 6))
 for iscen, scenario in enumerate(scenarios):
     ax[iscen].plot(np.arange(-1, 476), (100*(irf[scenario]["constant10"]/10-irf[scenario]["constant"])/irf[scenario]["constant"]).median(dim='config'));
-    ax[iscen].set_title(f'% difference 10MtCH4/10 v. 1MtCH4 for {scenario}')
+    ax[iscen].set_title(f'% difference 10GtCO2/10 v. 1GtCO2 for {scenario}')
     ax[iscen].set_xlim(0, 100)
 #    ax[iscen].set_ylim(0.0, 7e-5)
 #plt.axhline(0, ls=":", color="k")
-ax[0].set_ylabel('% relative to 1MtCH4')
+ax[0].set_ylabel('% relative to 1GtCO2')
 
-plt.savefig('../plots/difference_10Mt_1Mt_ch4.png')
+plt.savefig('../plots/difference_10Gt_1Gt_co2.png')
 
 # %%
 #xr.DataArray.from_dict(irf)
@@ -285,7 +285,7 @@ ds
 os.makedirs('../output/', exist_ok=True)
 
 # %%
-ds.to_netcdf('../output/shapes_irf_1MtCH4.nc')
+ds.to_netcdf('../output/shapes_irf_1GtCO2.nc')
 
 # %%
 f_irf['frontload']
@@ -321,6 +321,6 @@ ds = xr.Dataset(
 )
 
 # %%
-ds.to_netcdf('../output/shapes_raw_1MtCH4.nc')
+ds.to_netcdf('../output/shapes_raw_1GtCO2.nc')
 
 # %%
