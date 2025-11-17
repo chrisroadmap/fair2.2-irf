@@ -236,6 +236,7 @@ output = np.stack(
                 irf['ssp119']['constant'].data, 
                 irf['ssp119']['rampup'].data, 
                 irf['ssp119']['rampdown'].data,
+                irf['ssp119']['constant10'].data,
             ), axis=0
         ), 
         np.stack(
@@ -246,6 +247,7 @@ output = np.stack(
                 irf['ssp245']['constant'].data, 
                 irf['ssp245']['rampup'].data, 
                 irf['ssp245']['rampdown'].data,
+                irf['ssp245']['constant10'].data,
             ), axis=0
         ),
         np.stack(
@@ -256,6 +258,7 @@ output = np.stack(
                 irf['ssp585']['constant'].data, 
                 irf['ssp585']['rampup'].data, 
                 irf['ssp585']['rampdown'].data,
+                irf['ssp585']['constant10'].data,
             ), axis=0
         ),
     ), axis=0
@@ -271,7 +274,7 @@ ds = xr.Dataset(
     ),
     coords = dict(
         scenario = ['ssp119', 'ssp245', 'ssp585'],
-        profile = ['frontload', 'backload', 'bell', 'constant', 'rampup', 'rampdown'],
+        profile = ['frontload', 'backload', 'bell', 'constant', 'rampup', 'rampdown', 'constant10'],
         timebounds = np.arange(-1, 476),
         config = df_configs.index
     ),
@@ -303,6 +306,7 @@ output = np.stack(
         (f_irf['constant'].temperature).sel(layer=0).data, 
         (f_irf['rampup'].temperature).sel(layer=0).data, 
         (f_irf['rampdown'].temperature).sel(layer=0).data,
+        (f_irf['constant10'].temperature).sel(layer=0).data, 
     ), axis=2
 ).transpose(1,2,0,3)
 
@@ -313,7 +317,7 @@ ds = xr.Dataset(
     ),
     coords = dict(
         scenario = ['ssp119', 'ssp245', 'ssp585'],
-        profile = ['frontload', 'backload', 'bell', 'constant', 'rampup', 'rampdown'],
+        profile = ['frontload', 'backload', 'bell', 'constant', 'rampup', 'rampdown', 'constant10'],
         timebounds = np.arange(1750, 2501),
         config = df_configs.index
     ),
