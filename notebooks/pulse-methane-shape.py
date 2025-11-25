@@ -98,6 +98,29 @@ initialise(f.airborne_emissions, 0)
 # %%
 f.run()
 
+# %%
+output = f.temperature.sel(layer=0).data.transpose((1,0,2))
+output.shape
+
+# %%
+ds = xr.Dataset(
+    data_vars = dict(
+        temperature = (['scenario', 'timebounds', 'config'], output),
+    ),
+    coords = dict(
+        scenario = ['ssp119', 'ssp245', 'ssp585'],
+        timebounds = np.arange(1750, 2501),
+        config = df_configs.index
+    ),
+    attrs = dict(units = 'K')
+)
+
+# %%
+ds
+
+# %%
+ds.to_netcdf('../output/base_scenarios.nc')
+
 # %% [markdown]
 # ## Create some emissions profiles
 
